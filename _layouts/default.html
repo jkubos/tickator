@@ -8,6 +8,8 @@
     <title>Tickator</title>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,26 +22,38 @@
   
     <div class="container">
       <div class="page-header">
-        <h1>
-          <img src="/img/logo.png"/>
-          Tickator
-          <small>Parallelism done right</small>
-        </h1>
+        <div class="pull-right social-sites-bar">
+          <a href="https://twitter.com/tickator_org"><i class="fa fa-twitter"></i></a>
+          <a href="https://github.com/jkubos/tickator"><i class="fa fa-github"></i></a>
+        </div>      
+      
+        <a href="/">
+          <h1>
+            <img src="/img/logo.png"/>
+            Tickator
+            <small>Parallelism done right</small>
+          </h1>
+        </a>
       </div>
       
       <div class="row">
         <div class="col-md-3">
           <ul class="nav nav-stacked" id="menu">
-            <li><a href="#sec0">Section 0</a></li>
-            <li><a href="#sec1">Section 1</a></li>
-            <li><a href="#sec2">Section 2</a></li>
-            <li><a href="#sec3">Section 3</a></li>
-            <li><a href="#sec4">Section 4</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/articles/what-is-tickator">What is tickator</a></li>
+            <li><a href="/articles/relation-to-other-technologies">Relation to other technologies</a></li>
+            <li><a href="/articles/credits">Credits</a></li>
+            <li><a href="/articles/how-it-began">How it all began</a></li>
           </ul>
         </div>
         
-        <div class="col-md-9">
+        <div class="col-md-7">
           {{ content }}
+        </div>
+        
+        <div class="col-md-2">
+          <a class="twitter-timeline" href="https://twitter.com/tickator_org" data-widget-id="700430781898997760">Tweets by @tickator_org</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         </div>
       </div>
       
