@@ -7,14 +7,14 @@ permalink: /articles/why-i-believe-it-works
 Why I believe it works
 ======================
 
-I have **guts feeling :-)** And I have it since 2010. Since that time I made few attempts to test concepts of Tickator in software I designed in both spare time and at work. I can name two.
+I have **guts feeling :-)** Since 2011 I made few attempts to test concepts of Tickator in software I designed in both spare time and at work. I can name two.
 
 Naïve implementation
 --------------------
 
-In 2011 I was working on architecture of [application](http://www.ambergtechnologies.ch/en/products/tunnel-seismics/tsp-203plus/) used for seimic prediction in tunneling industry. When I collected all requirements and start thining about design I reallized that implement some parts will be tough. Beside hard math there were visual editors - for tunnel shape, sensors geometry, for shortest path visualization, results visualization, etc. Some information like tunnel shape or sensor was visible in multiple editors. But in some as 3D, in some as 2D, top view, side view, printed reports, table. In some editors was even the same information presented in multiple views simultaneously...
+In 2011 I was working on architecture of [application](http://www.ambergtechnologies.ch/en/products/tunnel-seismics/tsp-203plus/) used for seimic prediction in tunneling industry. When I collected all requirements and start thining about design I reallized that implement some parts will be tough. Beside hard math there were visual editors - for tunnel shape, sensors geometry, for shortest path visualization, results visualization, etc. Some information like tunnel shape or sensor was visible in multiple editors. What's worse in various visualizations simulaneously: 3D, 2D, top view, side view, printed reports, tables, ... It was also possible to change information in multiple locations - eg. drag&drop in 2D view and by editing in table.
 
-I have never before designing architecture of commercial application but I have seen enoug to remeber some problems that this single-model/multiple-views can cause. I have seen programmers refreshing "everything" because the were not able to say what minor change in model should change in all views. I have seen "refresh" command that helps user if something is not refreshed. I have seen users reopening editor to see changes they made. I have seen editors slow as hell.
+I have never before designing architecture of commercial application but I have seen enoug to remeber some problems that this single-model/multiple-views can cause. I have seen programmers refreshing "everything" because they were not able to say what minor change in model should change in all views. I have seen "refresh" command that helps user if something was not refreshed. I have seen users reopening editor to see changes they made. I have seen editors slow as hell.
 
 And I did't want to have this in **my application**. At that time collegue of mine explained me some aspects of his rendering library. He described model that he uses to update views from his presentation-models. That inspired me together with [Loius Savaign](/articles/credits) to try to use similar approach. It was quite a risk but I had guts feeling that it may work.
 
