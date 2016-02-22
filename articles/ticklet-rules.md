@@ -1,11 +1,11 @@
 ---
 layout: default
 title: Hujer
-permalink: /articles/rules
+permalink: /articles/ticklet-rules
 ---
 
-Rules
-=====
+Ticklet rules
+=============
 
 Rule 1: There is global tick
 ----------------------------

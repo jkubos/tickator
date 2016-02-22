@@ -38,3 +38,4 @@ Ivan Sutherland
 *   Software miss synchronization pulse that solves a lot of issues in hardware. Moment when input signal arive. One, other, both, none. But never **half of signal** - as it may happen in thread/process based parallelism.
 *   Software should be more about **configuration** than programming.
 *   Configuration should be done in form of **diagrams**, not text.
+*   In pioneer ages was logic (vacuum tubes) expensive and wiring (copper wires) cheap. That was changed to cheap logic (bilions of tranzistors) and expensive wiring (done during manufacturing and cannot be changed later).

@@ -4,10 +4,15 @@ title: Hujer
 permalink: /articles/what-is-tickator
 ---
 
-What is Tickator
-================
+What is Tickator?
+=================
 
-Tickator is an attempt to implement unusual parallel computation model. Model, that is way different that multithreading, functional programming, actors, fork-join, Disruptor, you-name-it.
+Tickator is **software model of parallel computation**. Model, that is way different that multithreading, multiprocessing, functional programming, actors, fork-join, Disruptor, you-name-it. On the opposide hand, model that is **very similar to synchronous circuits** that are known from elektronics.
 
-Tickator is composed of components called Ticklets with input and output ports. Ticklets are then connected to each other.
+Key properties:
+
+{% include key-properties.md %}
+
+Best way of start if to check page [Architecture](/articles/architecture).
+
 
