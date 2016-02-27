@@ -29,7 +29,14 @@ Masivelly parallel
 
 Because Tickator obeys all fundamental [rules](/articles/rules), it may be executed by any number of units - threads, CPU cores, processes, separate CPUs, ... There is no chance two units will contend for the same data. So if you have single core CPU in your computer - fine. If you have 32 CPU beast - fine.
 
-In far future we may reach optimal state - there will be 1:1 mapping between CPU core and ticklet. But there is a long way to have it.
+In far future we may reach optimal state - there will be 1:1 mapping between CPU core and ticklet. But there is a long way to have it. Imagine sorting that uses for sorting N values (N/2)*(N/4) ticklets in shape of triangle, each comparing two values. That would be fastest sort possible - N+log2(N).
+
+<center>
+  <img src="/img/sort.png"/>
+</center>
+<br/>
+
+In our case will be numbers sorted in 8+log2(8)=11 ticks.
 
 Change driven
 -------------
