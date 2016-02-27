@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; What is Tickator?
 permalink: /articles/what-is-tickator
 ---
 

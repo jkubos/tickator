@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; Credits
 permalink: /articles/credits
 ---
 

@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; Timing and rules
 permalink: /articles/timing-and-rules
 ---
 
-Rules
-=====
+Timing and rules
+================
 
 Rule 1: There is global tick
 ----------------------------

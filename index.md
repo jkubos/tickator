@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Tickator&#58; Blog
 ---
 
 {% for post in site.posts %}

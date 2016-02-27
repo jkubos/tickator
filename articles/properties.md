@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; Properties
 permalink: /articles/properties
 ---
 

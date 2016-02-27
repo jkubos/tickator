@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; How it all began
 permalink: /articles/how-it-began
 ---
 

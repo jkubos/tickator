@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hujer
+title: Tickator&#58; Why I believe it works
 permalink: /articles/why-i-believe-it-works
 ---
 
