@@ -29,19 +29,171 @@ Masivelly parallel
 
 Because Tickator obeys all fundamental [rules](/articles/rules), it may be executed by any number of units - threads, CPU cores, processes, separate CPUs, ... There is no chance two units will contend for the same data. So if you have single core CPU in your computer - fine. If you have 32 CPU beast - fine.
 
-In far future we may reach optimal state - there will be 1:1 mapping between CPU core and ticklet. But there is a long way to have it. Imagine sorting that uses for sorting N values (N/2)*(N/4) ticklets in shape of triangle, each comparing two values. That would be fastest sort possible - N+log2(N).
+In far future we may reach optimal state - there will be 1:1 mapping between CPU core and ticklet. But there is a long way to have it. Imagine searching for maximal value that uses for N values (N/2)*(N/4) ticklets in shape of triangle, each comparing two values. That would be fastest algorithm possible - O(log2(N)).
 
 <center>
-  <img src="/img/sort.png"/>
+  <img src="/img/find-max.png"/>
 </center>
 <br/>
 
-In our case will be numbers sorted in 8+log2(8)=11 ticks.
+In our case will be max value found in log2(8)=3 ticks. Table below depicts activity of ticklets during time.
+
+<table class='table'>
+    <tr>
+        <th>C1</th>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C2</th>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C3</th>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C4</th>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C5</th>
+        <td></td>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C6</th>
+        <td></td>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>C7</th>
+        <td></td>
+        <td></td>
+        <td class='success'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <th>tick</th>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
 
 Change driven
 -------------
 
 Ticklets are executed on change. So if there is no change in input there is no need to recompute anything. That can save a lot of performance. You probably know the [TwoHardThings](http://martinfowler.com/bliki/TwoHardThings.html) sentence about cache. This is not true in Tickator - caching is for free! Problem with naming things unfortunatelly persists.
+
+For example take ticklet Add, that sum two numbers from output A and B. Then stores output to RES. Every time any of inputs change, there is new result in next tick. This result is propagated to connected ticklets. But only on change. If nothing is changed, nothing is executed.
+
+<table class='table'>
+    <tr>
+        <th>A</th>
+        <td class='success'>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td class='success'>5</td>
+        <td>5</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <th>B</th>
+        <td class='success'>1</td>
+        <td>1</td>
+        <td class='success'>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <th>RES</th>
+        <td>0</td>
+        <td class='success'>2</td>
+        <td>2</td>
+        <td class='success'>3</td>
+        <td>3</td>
+        <td>3</td>
+        <td>3</td>
+        <td class='success'>7</td>
+        <td >7</td>
+    </tr>
+    <tr>
+        <th>tick</th>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
 
 Deterministic
 -------------
