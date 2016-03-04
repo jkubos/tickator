@@ -37,7 +37,7 @@ Tickator
 In Tickator is change spread in waves:
 
 <center>
-  <img src="/img/tickator-flow.png"/>
+  <img src="/img/ticlet-flow.png"/>
 </center>
 <br/>
 
