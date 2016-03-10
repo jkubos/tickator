@@ -13,6 +13,7 @@
         <li><a href="/articles/program-flow" class="{% if page.url == '/articles/program-flow' %}currrent-page{% endif %}">Program flow</a></li>
         <li><a href="/articles/properties" class="{% if page.url == '/articles/properties' %}currrent-page{% endif %}">Properties</a></li>
         <li><a href="/articles/relation-to-other-technologies" class="{% if page.url == '/articles/relation-to-other-technologies' %}currrent-page{% endif %}">Relation to other technologies</a></li>
+        <li><a href="/articles/complexity" class="{% if page.url == '/articles/complexity' %}currrent-page{% endif %}">Complexity</a></li>
       </ul>
     </li>
     <li><a href="/articles/implementation" class="{% if page.url == '/articles/implementation' %}currrent-page{% endif %}">Implementation</a></li>
