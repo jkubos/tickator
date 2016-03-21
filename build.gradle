@@ -1,0 +1,20 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+
+dependencies {
+    compile "org.apache.commons:commons-lang3:3.4"
+    compile "commons-io:commons-io:2.4"
+    compile "org.apache.commons:commons-collections4:4.0"
+
+    compile "org.apache.logging.log4j:log4j-web:2.3"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:2.3"
+    compile "org.slf4j:slf4j-api:1.7.12"
+
+    testCompile "junit:junit:4.12"
+}

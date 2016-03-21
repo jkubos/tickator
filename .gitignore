@@ -1,0 +1,14 @@
+.metadata/
+.settings/
+.gradle/
+bin/
+build/
+
+.project
+.classpath
+
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
