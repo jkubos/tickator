@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.tickator.utils.ConsumerThrowingException;
+import org.tickator.utils.TickatorUtils;
 
 public class MultiInputPort<T> implements Connectable<T> {	
 	private List<OutputPort<T>> sources = new ArrayList<>();
@@ -39,10 +40,23 @@ public class MultiInputPort<T> implements Connectable<T> {
 	}
 
 	@Override
-	public void forEachConnected(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
-		for (OutputPort<T> source : sources) {
-			block.accept(source);
-		}
+	public void forEachConnected(ConsumerThrowingException<OutputPort<T>> block) {
+		TickatorUtils.withRuntimeException(()->{
+			for (OutputPort<T> source : sources) {
+				block.accept(source);
+			}
+		});
+	}
+
+	@Override
+	public void forEachChanged(ConsumerThrowingException<OutputPort<T>> block) {
+		TickatorUtils.withRuntimeException(()->{
+			for (OutputPort<T> source : sources) {
+				if (source.wasChanged()) {
+					block.accept(source);
+				}
+			}
+		});
 	}
 
 	@Override

@@ -38,6 +38,13 @@ public class InputPort<T> implements Connectable<T> {
 		}
 	}
 	
+	@Override
+	public void forEachChanged(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
+		if (source!=null && source.wasChanged()) {
+			block.accept(source);
+		}
+	}
+	
 	public T get() {
 		return getOrDefault(null);
 	}

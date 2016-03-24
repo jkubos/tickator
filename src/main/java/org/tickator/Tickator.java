@@ -62,6 +62,12 @@ public class Tickator {
 		return tick;
 	}
 	
+	void scheduleAsync(Ticklet ticklet) {
+		synchronized (asyncScheduleRequests) {
+			asyncScheduleRequests.add(ticklet);
+		}		
+	}
+	
 	/**
 	 * Execution loop of 
 	 */
@@ -75,7 +81,7 @@ public class Tickator {
 					phase2();
 					phase3();
 					phase4();
-					System.out.println("#########################################################################");
+					//System.out.println("#########################################################################");
 					++tick;
 				} else {
 					executor.sleepOnIdle();
@@ -91,8 +97,10 @@ public class Tickator {
 	 * Add asynchronous request for execution.
 	 */
 	private void phase1() {
-		asyncScheduleRequests.forEach(executor::schedule);
-		asyncScheduleRequests.clear();
+		synchronized (asyncScheduleRequests) {
+			asyncScheduleRequests.forEach(executor::schedule);
+			asyncScheduleRequests.clear();
+		}
 	}
 
 	/**

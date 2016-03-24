@@ -26,6 +26,10 @@ public class OutputPort<T> implements Port {
 		
 		ticklet.registerPort(this);
 	}
+
+	public void pulse() {
+		ticklet.getTickator().getExecutor().markChanged(this);
+	}
 	
 	public void set(T value) {
 		long tick = ticklet.getTickator().getTick();
@@ -101,5 +105,11 @@ public class OutputPort<T> implements Port {
 
 	public Iterable<Connectable<?>> getDepending() {
 		return depending;
+	}
+
+	public boolean wasChanged() {
+		long tick = ticklet.getTickator().getTick();
+		
+		return validFromTickA==tick || validFromTickB==tick;
 	}
 }

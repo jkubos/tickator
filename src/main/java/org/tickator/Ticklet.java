@@ -28,4 +28,8 @@ public abstract class Ticklet {
 	public Tickator getTickator() {
 		return tickator;
 	}
+	
+	protected void scheduleAsync() {
+		tickator.scheduleAsync(this);
+	}
 }
