@@ -6,12 +6,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.tickator.change.AddTickletAction;
 import org.tickator.change.ChangeScope;
 import org.tickator.change.ConnectAction;
+import org.tickator.meta.TickletsRegistry;
 import org.tickator.utils.TickatorUtils;
 
 public class Tickator {
+	private static Logger logger = LoggerFactory.getLogger(Tickator.class);
 	
 	private volatile long tick;
 	
@@ -23,8 +28,18 @@ public class Tickator {
 	
 	private Set<Ticklet> asyncScheduleRequests = new HashSet<>();
 	
-	public Tickator(TickatorExecutor executor) {
+	private TickletsRegistry tickletsRegistry;
+
+	private String id;
+	
+	public Tickator(String id, TickatorExecutor executor) {
+		logger.debug("Instantiating Tickator {}", id);
+		this.id = id;
 		this.executor = executor;
+	}
+	
+	public void start() {
+		start(null);
 	}
 	
 	public void start(ChangeScope createAtStartup) {
@@ -37,7 +52,10 @@ public class Tickator {
 		Set<Ticklet> tickletsToExecute = new HashSet<>();
 		Map<String, Ticklet> ticklets = new HashMap<>();
 		
-		applyChange(createAtStartup, tickletsToExecute, ticklets);
+		if (createAtStartup!=null) {
+			applyChange(createAtStartup, tickletsToExecute, ticklets);
+		}
+		
 		controlThread.start();
 	}
 
@@ -57,6 +75,10 @@ public class Tickator {
 		controlThread.interrupt();
 		waitForFinish();
 	}
+	
+	public TickletsRegistry getTickletsRegistry() {
+		return tickletsRegistry;
+	}
 
 	long getTick() {
 		return tick;
@@ -73,6 +95,12 @@ public class Tickator {
 	 */
 	private void execute() {
 		try {
+			MDC.put("tickator", id);
+			
+			logger.debug("Starting control thread");
+			
+			tickletsRegistry = new TickletsRegistry();
+			
 			while (!Thread.interrupted()) {
 				phase1();
 				
@@ -88,7 +116,7 @@ public class Tickator {
 				}			
 			}	
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Tickator main thread exiting due to exception!", e);
 			System.exit(-1);
 		}
 	}
@@ -132,18 +160,7 @@ public class Tickator {
 	private void applyChange(ChangeScope scope, Set<Ticklet> tickletsToExecute, Map<String, Ticklet> ticklets) {
 		TickatorUtils.withRuntimeException(()->{
 			for (AddTickletAction addTickletAction : scope.getAddTickletActions()) {
-				Class<?>[] types = new Class<?>[1+addTickletAction.getTemplateArgs().size()];
-				Object[] params = new Object[1+addTickletAction.getTemplateArgs().size()];
-				
-				types[0] = getClass();
-				params[0] = this;
-				
-				TickatorUtils.forEachWithIndex(addTickletAction.getTemplateArgs(), (param, i)->{
-					types[i+1] = param.getClass();
-					params[i+1] = param;
-				});
-				
-				Ticklet ticklet = addTickletAction.getKlass().getConstructor(types).newInstance(params);
+				Ticklet ticklet = addTickletAction.getKlass().getConstructor(new Class<?>[]{getClass()}).newInstance(new Object[]{this});
 				ticklets.put(addTickletAction.getUuid(), ticklet);
 				
 				if (addTickletAction.isAutostart()) {

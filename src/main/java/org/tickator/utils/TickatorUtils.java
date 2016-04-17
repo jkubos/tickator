@@ -11,6 +11,10 @@ public class TickatorUtils {
 		void run() throws Exception;
 	}
 	
+	public interface SupplierWithException<T> {
+		T supply() throws Exception;
+	}
+	
 	public interface BiConsumerWithException<T, U> {
 		void apply(T t, U u) throws Exception;
 	}
@@ -34,6 +38,23 @@ public class TickatorUtils {
 	public static void withRuntimeException(RunnableWithException block) {
 		try {
 			block.run();
+		} catch (Exception e) {
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException)e;
+			} else {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+	/**
+	 * Execute block of code that may throw any exception. If exception occurs rethrow it as RuntimeException.
+	 * @param block
+	 * @return Returned value of block
+	 */
+	public static <T> T withRuntimeException(SupplierWithException<T> block) {
+		try {
+			return block.supply();
 		} catch (Exception e) {
 			if (e instanceof RuntimeException) {
 				throw (RuntimeException)e;
