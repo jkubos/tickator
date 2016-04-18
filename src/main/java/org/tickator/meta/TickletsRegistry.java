@@ -1,7 +1,5 @@
 package org.tickator.meta;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -10,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tickator.Ticklet;
@@ -19,10 +18,14 @@ public class TickletsRegistry {
 	private static Logger logger = LoggerFactory.getLogger(TickletsRegistry.class);
 			
 	public static final String REGISTRY_FILE = "ticklets.txt";
+
+	private static final String SETUP_FIELD = "SETUP";
+
+	public static final String PORT_FIELD_PREFIX = "DEF_";
 	
-	public String PORT_PREFIX = "DEF_";
+	public static final String PROPERTY_FIELD_PREFIX = "PROP_";
 	
-	private final Map<Class<? extends Ticklet>, TickletMetadata> metadata = new HashMap<>();
+	private final Map<Class<? extends Ticklet>, TickletMetadata> tickletsMetadata = new HashMap<>();
 
 	public TickletsRegistry() {
 		add(getClass().getClassLoader());
@@ -68,22 +71,53 @@ public class TickletsRegistry {
 			@SuppressWarnings("unchecked")
 			Class<? extends Ticklet> klass = (Class<? extends Ticklet>) rawKlass;
 			
-			logger.debug("Class found, trying to search for ports");
+			TickletMetadata metadata = addSetup(klass);
+			addPorts(klass, metadata);
+			addProperties(klass, metadata);
 			
-			for (Field field : klass.getDeclaredFields()) {
-				if (Modifier.isStatic(field.getModifiers())) {
-					if (field.getName().matches("^"+PORT_PREFIX +".*$")) {
-						logger.debug("Registering port {}", field.getName());
-						registerPort(klass, (PortDefinition<?>)field.get(null));
-					}
-				}
-			}
+			tickletsMetadata.put(klass, metadata);
 			
 			logger.info("Ticklet [{}] successfully initialized", klass.getName());
 		});
 	}
 
-	private void registerPort(Class<? extends Ticklet> klass, PortDefinition<?> portDefinition) {
-		metadata.computeIfAbsent(klass, k->new TickletMetadata());
+	private TickletMetadata addSetup(Class<? extends Ticklet> klass) throws Exception {
+		logger.debug("Searching for setup");
+		
+		MutableObject<TickletSetup> setup = new MutableObject<>();
+		
+		TickatorUtils.forEachStaticField(klass, SETUP_FIELD, field->{
+			logger.debug("Found setup field");
+			
+			setup.setValue((TickletSetup)field.get(null));
+		});
+		
+		if (setup.getValue()==null) {
+			logger.debug("Setup not found, creating default instance");
+			setup.setValue(new TickletSetup());
+		}
+		
+		return new TickletMetadata(klass.getName(), setup.getValue());
 	}
+
+	private void addPorts(Class<? extends Ticklet> klass, TickletMetadata metadata) throws Exception {
+		logger.debug("Searching for ports");
+		
+		TickatorUtils.forEachStaticField(klass, "^"+PORT_FIELD_PREFIX +".*$", field->{
+			logger.debug("Adding port {}", field.getName());
+			
+			metadata.addPort((PortDefinition<?>)field.get(null));
+		});
+	}
+
+	private void addProperties(Class<? extends Ticklet> klass, TickletMetadata metadata) throws Exception {
+		logger.debug("Searching for properties");
+		
+		TickatorUtils.forEachStaticField(klass, "^"+PROPERTY_FIELD_PREFIX +".*$", field->{
+			logger.debug("Adding property {}", field.getName());
+			metadata.addProperty((PropertyDefinition<?>)field.get(null));
+		});
+	}
+
+	
 }

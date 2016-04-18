@@ -1,6 +1,10 @@
 package org.tickator.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Iterator;
+
+import org.tickator.Ticklet;
 
 /**
  * Various static utility methods used by Tickator and ticklets
@@ -81,5 +85,22 @@ public class TickatorUtils {
 				block.apply(val, i++);
 			}
 		});
+	}
+	
+	/**
+	 * Call block for each static field of class that matches regex pattern
+	 * @param klass Target class
+	 * @param pattern Regex pattern
+	 * @param block Block that should be invoken
+	 * @throws Exception
+	 */
+	public static void forEachStaticField(Class<? extends Ticklet> klass, String pattern, ConsumerThrowingException<Field> block) throws Exception {
+		for (Field field : klass.getDeclaredFields()) {
+			if (Modifier.isStatic(field.getModifiers())) {
+				if (field.getName().matches(pattern)) {
+					block.accept(field);
+				}
+			}
+		}
 	}
 }

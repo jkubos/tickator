@@ -31,6 +31,12 @@ public class InputPort<T> implements Connectable<T> {
 		this.source = null;
 	}
 
+	public void ifChanged(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
+		if (source!=null && source.wasChanged()) {
+			block.accept(source);
+		}
+	}
+
 	@Override
 	public void forEachConnected(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
 		if (source!=null) {
@@ -40,9 +46,7 @@ public class InputPort<T> implements Connectable<T> {
 	
 	@Override
 	public void forEachChanged(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
-		if (source!=null && source.wasChanged()) {
-			block.accept(source);
-		}
+		ifChanged(block);
 	}
 	
 	public T get() {

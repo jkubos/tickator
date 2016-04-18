@@ -8,3 +8,8 @@ org.tickator.stdlib.conditional.NullFilter
 
 org.tickator.stdlib.convert.DoubleToLong
 org.tickator.stdlib.convert.LongToDouble
+
+org.tickator.stdlib.base.DoubleConstant
+org.tickator.stdlib.base.LongConstant
+
+org.tickator.stdlib.debug.StdoutPrint

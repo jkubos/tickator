@@ -8,13 +8,20 @@ public class TickletSetupBuilder {
 		res = new TickletSetup();
 	}
 	
+	public TickletSetup build() {
+		return res;
+	}
+	
 	public TickletSetupBuilder withAutoStart(boolean autoStart) {
 		res.setAutoStart(autoStart);
 		
 		return this;
 	}
-	
-	public TickletSetup build() {
-		return res;
+
+	public TickletSetupBuilder withPropagatedType(InputPortDefinition<?> from,
+			OutputPortDefinition<?> to) {
+		
+		
+		return this;
 	}
 }
