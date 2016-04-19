@@ -11,6 +11,6 @@ public class OutputPortDefinition<T> extends PortDefinition<T> {
 
 	
 	public OutputPort<T> create(Ticklet ticklet) {
-		return new OutputPort<>(ticklet, getKlass(), getName());
+		return new OutputPort<>(ticklet, this);
 	}
 }

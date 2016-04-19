@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class TickletsRegistry {
 	public static final String PROPERTY_FIELD_PREFIX = "PROP_";
 	
 	private final Map<Class<? extends Ticklet>, TickletMetadata> tickletsMetadata = new HashMap<>();
-	private final Collection<TickletMetadata> tickletsMetadataReadOnly = Collections.unmodifiableCollection(tickletsMetadata.values());
+	private final Collection<TickletMetadata> tickletsMetadataReadOnly = Collections.unmodifiableCollection(tickletsMetadata.values());	
 	
 	public TickletsRegistry() {
 		
@@ -139,5 +140,11 @@ public class TickletsRegistry {
 			logger.debug("Adding property {}", field.getName());
 			metadata.addProperty((PropertyDefinition<?>)field.get(null));
 		});
+	}
+
+	public TickletMetadata lookup(Class<? extends Ticklet> klass) {
+		Validate.validState(tickletsMetadata.containsKey(klass), "Cannot find metadata of class %s [%s]", klass.getName(), klass.getClassLoader());
+		
+		return tickletsMetadata.get(klass);
 	}	
 }

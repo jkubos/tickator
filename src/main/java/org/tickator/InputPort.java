@@ -1,18 +1,18 @@
 package org.tickator;
 
 import org.apache.commons.lang3.Validate;
+import org.tickator.meta.InputPortDefinition;
+import org.tickator.meta.PortDefinition;
 import org.tickator.utils.ConsumerThrowingException;
 
 public class InputPort<T> implements Connectable<T> {
 	private OutputPort<T> source;
-	private String name;
-	private Class<T> klass;
 	private Ticklet ticklet;
+	private InputPortDefinition<T> definition;
 
-	public InputPort(Ticklet ticklet, Class<T> klass, String name) {
+	public InputPort(Ticklet ticklet, InputPortDefinition<T> definition) {
 		this.ticklet = ticklet;
-		this.name = name;
-		this.klass = klass;
+		this.definition = definition;
 		
 		ticklet.registerPort(this);
 	}
@@ -20,7 +20,7 @@ public class InputPort<T> implements Connectable<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void connect(OutputPort<?> source) {
-		Validate.validState(getKlass().isAssignableFrom(source.getKlass()));
+		Validate.validState(getDefinition().getKlass().isAssignableFrom(source.getDefinition().getKlass()));
 		
 		this.source = (OutputPort<T>) source;
 		source.registerDepending(this);
@@ -29,6 +29,16 @@ public class InputPort<T> implements Connectable<T> {
 	@Override
 	public void disconnect(OutputPort<T> source) {
 		this.source = null;
+	}
+	
+	@Override
+	public PortDefinition<T> getDefinition() {
+		return definition;
+	}
+
+	@Override
+	public Ticklet getTicklet() {
+		return ticklet;
 	}
 
 	public void ifChanged(ConsumerThrowingException<OutputPort<T>> block) throws Exception {
@@ -61,20 +71,5 @@ public class InputPort<T> implements Connectable<T> {
 			
 			return res==null ? defaultValue : res;
 		}
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public Class<T> getKlass() {
-		return klass;
-	}
-
-	@Override
-	public Ticklet getTicklet() {
-		return ticklet;
 	}
 }

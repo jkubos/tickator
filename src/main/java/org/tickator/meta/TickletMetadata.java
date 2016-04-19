@@ -52,4 +52,8 @@ public class TickletMetadata {
 	public Class<? extends Ticklet> getKlass() {
 		return klass;
 	}
+
+	public boolean hasPort(PortDefinition<?> definition) {
+		return ports.contains(definition);
+	}
 }

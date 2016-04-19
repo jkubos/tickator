@@ -4,22 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
+import org.tickator.meta.MultiInputPortDefinition;
+import org.tickator.meta.PortDefinition;
 import org.tickator.utils.ConsumerThrowingException;
 import org.tickator.utils.TickatorUtils;
 
 public class MultiInputPort<T> implements Connectable<T> {	
 	private List<OutputPort<T>> sources = new ArrayList<>();
 
-	private String name;
-
-	private Class<T> klass;
-
 	private Ticklet ticklet;
 
-	public MultiInputPort(Ticklet ticklet, Class<T> klass, String name) {
+	private MultiInputPortDefinition<T> definition;
+
+	public MultiInputPort(Ticklet ticklet, MultiInputPortDefinition<T> definition) {
 		this.ticklet = ticklet;
-		this.name = name;
-		this.klass = klass;
+		this.definition = definition;
 		
 		ticklet.registerPort(this);
 	}
@@ -27,7 +26,7 @@ public class MultiInputPort<T> implements Connectable<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void connect(OutputPort<?> source) {
-		Validate.validState(getKlass().isAssignableFrom(source.getKlass()));
+		Validate.validState(getDefinition().getKlass().isAssignableFrom(source.getDefinition().getKlass()));
 		
 		sources.add((OutputPort<T>) source);
 
@@ -58,19 +57,14 @@ public class MultiInputPort<T> implements Connectable<T> {
 			}
 		});
 	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public Class<T> getKlass() {
-		return klass;
-	}
-
+	
 	@Override
 	public Ticklet getTicklet() {
 		return ticklet;
+	}
+
+	@Override
+	public PortDefinition<T> getDefinition() {
+		return definition;
 	}
 }

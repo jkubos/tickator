@@ -10,6 +10,6 @@ public class InputPortDefinition<T> extends PortDefinition<T> {
 	}
 	
 	public InputPort<T> create(Ticklet ticklet) {
-		return new InputPort<>(ticklet, getKlass(), getName());
+		return new InputPort<>(ticklet, this);
 	}
 }

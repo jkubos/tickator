@@ -2,7 +2,7 @@ package org.tickator;
 
 import org.tickator.utils.ConsumerThrowingException;
 
-public interface Connectable<T> extends Port {
+public interface Connectable<T> extends Port<T> {
 	void connect(OutputPort<?> source);
 	
 	void disconnect(OutputPort<T> source);
@@ -10,6 +10,4 @@ public interface Connectable<T> extends Port {
 	void forEachConnected(ConsumerThrowingException<OutputPort<T>> block) throws Exception;
 	
 	void forEachChanged(ConsumerThrowingException<OutputPort<T>> block) throws Exception;
-	
-	Class<T> getKlass();
 }

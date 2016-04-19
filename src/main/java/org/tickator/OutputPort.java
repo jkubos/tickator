@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class OutputPort<T> implements Port {
+import org.tickator.meta.OutputPortDefinition;
+import org.tickator.meta.PortDefinition;
+
+public class OutputPort<T> implements Port<T> {
 	private T valueA = null;
 	private long validFromTickA = 0;
 	
 	private T valueB = null;
 	private long validFromTickB = -1;
 
-	private Class<T> klass;
-
-	private String name;
-
 	private Ticklet ticklet;
 	
 	private List<Connectable<?>> depending = new ArrayList<>();
+	private OutputPortDefinition<T> definition;
 	
-	public OutputPort(Ticklet ticklet, Class<T> klass, String name) {
-		this.klass = klass;
-		this.name = name;
+	public OutputPort(Ticklet ticklet, OutputPortDefinition<T> definition) {
+		this.definition = definition;
 		this.ticklet = ticklet;
 		
 		ticklet.registerPort(this);
@@ -81,23 +80,14 @@ public class OutputPort<T> implements Port {
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	public Class<T> getKlass() {
-		return klass;
-	}
-
-	@Override
 	public Ticklet getTicklet() {
 		return ticklet;
 	}
 	
 	public void registerDepending(Connectable<?> input) {
-		if (!input.getKlass().isAssignableFrom(getKlass())) {
+		if (!input.getDefinition().getKlass().isAssignableFrom(getDefinition().getKlass())) {
 			throw new RuntimeException(String.format("Incompatible types of output %s and input %s!", 
-					getKlass().getSimpleName(), input.getKlass().getSimpleName()));
+					getDefinition().getKlass().getSimpleName(), input.getDefinition().getKlass().getSimpleName()));
 		}
 		
 		depending.add(input);
@@ -111,5 +101,10 @@ public class OutputPort<T> implements Port {
 		long tick = ticklet.getTickator().getTick();
 		
 		return validFromTickA==tick || validFromTickB==tick;
+	}
+
+	@Override
+	public PortDefinition<T> getDefinition() {
+		return definition;
 	}
 }

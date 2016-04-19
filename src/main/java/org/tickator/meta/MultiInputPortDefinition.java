@@ -10,6 +10,6 @@ public class MultiInputPortDefinition<T> extends PortDefinition<T> {
 
 	
 	public MultiInputPort<T> create(Ticklet ticklet) {
-		return new MultiInputPort<T>(ticklet, getKlass(), getName());
+		return new MultiInputPort<T>(ticklet, this);
 	}
 }

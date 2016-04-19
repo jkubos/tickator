@@ -1,6 +1,8 @@
 package org.tickator;
 
-public interface Port {
-	String getName();
+import org.tickator.meta.PortDefinition;
+
+public interface Port<T> {
 	Ticklet getTicklet();
+	PortDefinition<T> getDefinition();
 }

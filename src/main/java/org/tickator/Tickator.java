@@ -178,33 +178,34 @@ public class Tickator {
 				Ticklet b = ticklets.get(connectAction.getB().getTickletUuid());
 				Validate.notNull(b);
 				
-				connect(a, connectAction.getA().getPort(), b, connectAction.getB().getPort());
+				int todo;
+//				connect(a, connectAction.getA().getPort(), b, connectAction.getB().getPort());
 			}
 		});		
 	}
 
-	private void connect(Ticklet a, String portNameA, Ticklet b, String portNameB) {
-		Port portA = a.getPort(portNameA);
-		Port portB = b.getPort(portNameB);
-		
-		OutputPort<?> output;
-		
-		Connectable<?> input;
-		
-		if (portA instanceof Connectable<?> && portB instanceof OutputPort<?>) {
-			output = (OutputPort<?>) portB;
-			input = (Connectable<?>) portA;
-		} else if (portA instanceof OutputPort<?> && portB instanceof Connectable<?>) {
-			output = (OutputPort<?>) portA;
-			input = (Connectable<?>) portB;
-		} else {
-			throw new RuntimeException(String.format("Cannot connect %s:'%s':%s to %s:'%s':%s", 
-					a.getClass().getName(), portNameA, portA.getClass().getSimpleName(), 
-					b.getClass().getName(), portNameB, portB.getClass().getSimpleName()));
-		}
-	
-		input.connect(output);
-	}
+//	private void connect(Ticklet a, String portNameA, Ticklet b, String portNameB) {
+//		Port<?> portA = a.getPort(portNameA);
+//		Port<?> portB = b.getPort(portNameB);
+//		
+//		OutputPort<?> output;
+//		
+//		Connectable<?> input;
+//		
+//		if (portA instanceof Connectable<?> && portB instanceof OutputPort<?>) {
+//			output = (OutputPort<?>) portB;
+//			input = (Connectable<?>) portA;
+//		} else if (portA instanceof OutputPort<?> && portB instanceof Connectable<?>) {
+//			output = (OutputPort<?>) portA;
+//			input = (Connectable<?>) portB;
+//		} else {
+//			throw new RuntimeException(String.format("Cannot connect %s:'%s':%s to %s:'%s':%s", 
+//					a.getClass().getName(), portNameA, portA.getClass().getSimpleName(), 
+//					b.getClass().getName(), portNameB, portB.getClass().getSimpleName()));
+//		}
+//	
+//		input.connect(output);
+//	}
 
 	public TickatorExecutor getExecutor() {
 		return executor;
