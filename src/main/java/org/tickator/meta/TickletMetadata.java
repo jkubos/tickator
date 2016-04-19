@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.tickator.Ticklet;
+
 public class TickletMetadata {
 	private final String name;
 	
@@ -14,10 +16,13 @@ public class TickletMetadata {
 
 	private List<PropertyDefinition<?>> properties = new ArrayList<>();
 	private List<PropertyDefinition<?>> propertiesReadOnly = Collections.unmodifiableList(properties);
+
+	private Class<? extends Ticklet> klass;
 	
-	TickletMetadata(String name, TickletSetup setup) {
+	TickletMetadata(String name, Class<? extends Ticklet> klass, TickletSetup setup) {
 		this.name = name;
 		this.setup = setup;
+		this.klass = klass;
 	}
 	
 	public String getName() {
@@ -42,5 +47,9 @@ public class TickletMetadata {
 	
 	void addProperty(PropertyDefinition<?> property) {
 		properties.add(property);
+	}
+
+	public Class<? extends Ticklet> getKlass() {
+		return klass;
 	}
 }

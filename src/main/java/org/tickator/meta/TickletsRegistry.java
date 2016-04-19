@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,12 +15,13 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tickator.Ticklet;
+import org.tickator.utils.SelfishClassLoader;
 import org.tickator.utils.TickatorUtils;
 
 public class TickletsRegistry {
 	private static Logger logger = LoggerFactory.getLogger(TickletsRegistry.class);
 			
-	public static final String REGISTRY_FILE = "ticklets.txt";
+	public static final String REGISTRY_FILE = "ticklets.import";
 
 	private static final String SETUP_FIELD = "SETUP";
 
@@ -33,41 +35,46 @@ public class TickletsRegistry {
 	public TickletsRegistry() {
 		
 	}
-
-	public void addOwnClassloader() {
-		add(getClass().getClassLoader());
-	}
 	
 	public Collection<TickletMetadata> getTickletsMetadata() {
 		return tickletsMetadataReadOnly;
 	}
 
-	public void add(ClassLoader classLoader) {
+	public void addTicklets(ClassLoader parentClassLoader, URL jarFile) {
+		logger.debug("Adding Ticklets from jar file "+jarFile);
+		
+		SelfishClassLoader classLoader = new SelfishClassLoader(parentClassLoader, jarFile);
+		
+		forEachImportedTicklet(classLoader, importedTicklet->{
+			classLoader.addSelfishFile(importedTicklet);
+			addTicklet(classLoader, importedTicklet);
+		});
+	}
+
+	public void addTicklets(ClassLoader classLoader) {
 		logger.debug("Adding Ticklets from classloader "+classLoader);
 		
+		forEachImportedTicklet(classLoader, importedTicklet->{
+			addTicklet(classLoader, importedTicklet);
+		});
+	}
+	
+	private void forEachImportedTicklet(ClassLoader classLoader, Consumer<String> block) {
 		TickatorUtils.withRuntimeException(()->{
 			Enumeration<URL> list = classLoader.getResources(REGISTRY_FILE);
 			
 			while (list.hasMoreElements()) {
-				add(classLoader, list.nextElement());
+				URL tickletsRegistryFile = list.nextElement();
+				String content = IOUtils.toString(tickletsRegistryFile.toURI());
+				Arrays.asList(content.split("\\R")).forEach(line->{				
+					String cleanLine = line.trim();
+					if (!StringUtils.isBlank(cleanLine) && !cleanLine.startsWith("#")) {
+						logger.debug("Found line with ticklet '{}'", cleanLine);
+						
+						block.accept(cleanLine);
+					}
+				});
 			}
-		});
-	}
-
-	private void add(ClassLoader classLoader, URL tickletsRegistryFile) {
-		logger.debug("Applying Ticklets from configuration '{}'", tickletsRegistryFile);
-		
-		TickatorUtils.withRuntimeException(()->{
-			String content = IOUtils.toString(tickletsRegistryFile.toURI());
-			
-			Arrays.asList(content.split("\\R")).forEach(line->{				
-				String cleanLine = line.trim();
-				if (!StringUtils.isBlank(cleanLine) && !cleanLine.startsWith("#")) {
-					logger.debug("Found line with ticklet '{}'", cleanLine);
-					
-					addTicklet(classLoader, cleanLine);
-				}
-			});
 		});
 	}
 
@@ -82,7 +89,7 @@ public class TickletsRegistry {
 			@SuppressWarnings("unchecked")
 			Class<? extends Ticklet> klass = (Class<? extends Ticklet>) rawKlass;
 			
-			TickletMetadata metadata = addSetup(klass);
+			TickletMetadata metadata = buildMetadata(klass);
 			addPorts(klass, metadata);
 			addProperties(klass, metadata);
 			
@@ -96,7 +103,7 @@ public class TickletsRegistry {
 		});
 	}
 
-	private TickletMetadata addSetup(Class<? extends Ticklet> klass) throws Exception {
+	private TickletMetadata buildMetadata(Class<? extends Ticklet> klass) throws Exception {
 		logger.debug("Searching for setup");
 		
 		MutableObject<TickletSetup> setup = new MutableObject<>();
@@ -112,7 +119,7 @@ public class TickletsRegistry {
 			setup.setValue(new TickletSetup());
 		}
 		
-		return new TickletMetadata(klass.getName(), setup.getValue());
+		return new TickletMetadata(klass.getName(), klass, setup.getValue());
 	}
 
 	private void addPorts(Class<? extends Ticklet> klass, TickletMetadata metadata) throws Exception {

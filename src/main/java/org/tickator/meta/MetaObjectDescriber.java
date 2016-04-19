@@ -5,7 +5,7 @@ import org.tickator.utils.TickatorUtils;
 public class MetaObjectDescriber {
 
 	public static String describe(TickletMetadata tickletMetadata) {
-		return "ticklet "+tickletMetadata.getName();
+		return String.format("ticklet %s [%s]", tickletMetadata.getName(), tickletMetadata.getKlass().getClassLoader());
 	}
 	
 	public static String describe(TickletMetadata tickletMetadata, PortDefinition<?> port) {
