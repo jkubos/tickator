@@ -3,6 +3,7 @@ package org.tickator.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
+import java.util.UUID;
 
 import org.tickator.Ticklet;
 
@@ -102,5 +103,18 @@ public class TickatorUtils {
 				}
 			}
 		}
+	}
+
+	public static boolean isValidUuid(String uuid) {
+		try {
+			UUID.fromString(uuid);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	public static void throwRuntime(String message, Object... params) {
+		throw new RuntimeException(String.format(message, params));
 	}
 }

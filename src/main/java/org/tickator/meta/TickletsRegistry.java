@@ -2,6 +2,8 @@ package org.tickator.meta;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +28,18 @@ public class TickletsRegistry {
 	public static final String PROPERTY_FIELD_PREFIX = "PROP_";
 	
 	private final Map<Class<? extends Ticklet>, TickletMetadata> tickletsMetadata = new HashMap<>();
-
+	private final Collection<TickletMetadata> tickletsMetadataReadOnly = Collections.unmodifiableCollection(tickletsMetadata.values());
+	
 	public TickletsRegistry() {
+		
+	}
+
+	public void addOwnClassloader() {
 		add(getClass().getClassLoader());
+	}
+	
+	public Collection<TickletMetadata> getTickletsMetadata() {
+		return tickletsMetadataReadOnly;
 	}
 
 	public void add(ClassLoader classLoader) {
@@ -75,6 +86,10 @@ public class TickletsRegistry {
 			addPorts(klass, metadata);
 			addProperties(klass, metadata);
 			
+			if (tickletsMetadata.containsKey(klass)) {
+				logger.warn("Overriding class {}", klass.getName());
+			}
+			
 			tickletsMetadata.put(klass, metadata);
 			
 			logger.info("Ticklet [{}] successfully initialized", klass.getName());
@@ -117,7 +132,5 @@ public class TickletsRegistry {
 			logger.debug("Adding property {}", field.getName());
 			metadata.addProperty((PropertyDefinition<?>)field.get(null));
 		});
-	}
-
-	
+	}	
 }

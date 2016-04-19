@@ -32,10 +32,11 @@ public class Tickator {
 
 	private String id;
 	
-	public Tickator(String id, TickatorExecutor executor) {
+	public Tickator(String id, TickatorExecutor executor, TickletsRegistry tickletsRegistry) {
 		logger.debug("Instantiating Tickator {}", id);
 		this.id = id;
 		this.executor = executor;
+		this.tickletsRegistry = tickletsRegistry;
 	}
 	
 	public void start() {
@@ -98,8 +99,6 @@ public class Tickator {
 			MDC.put("tickator", id);
 			
 			logger.debug("Starting control thread");
-			
-			tickletsRegistry = new TickletsRegistry();
 			
 			while (!Thread.interrupted()) {
 				phase1();
