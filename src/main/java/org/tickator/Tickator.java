@@ -12,11 +12,12 @@ import org.slf4j.MDC;
 import org.tickator.change.AddTickletAction;
 import org.tickator.change.ChangeScope;
 import org.tickator.change.ConnectAction;
+import org.tickator.meta.TickletMetadata;
 import org.tickator.meta.TickletsRegistry;
 import org.tickator.utils.TickatorUtils;
 
 public class Tickator {
-	private static Logger logger = LoggerFactory.getLogger(Tickator.class);
+	private static final Logger logger = LoggerFactory.getLogger(Tickator.class);
 	
 	private volatile long tick;
 	
@@ -26,7 +27,7 @@ public class Tickator {
 
 	private TickatorExecutor executor;
 	
-	private Set<Ticklet> asyncScheduleRequests = new HashSet<>();
+	private final Set<Ticklet> asyncScheduleRequests = new HashSet<>();
 	
 	private TickletsRegistry tickletsRegistry;
 
@@ -159,7 +160,10 @@ public class Tickator {
 	private void applyChange(ChangeScope scope, Set<Ticklet> tickletsToExecute, Map<String, Ticklet> ticklets) {
 		TickatorUtils.withRuntimeException(()->{
 			for (AddTickletAction addTickletAction : scope.getAddTickletActions()) {
-				Ticklet ticklet = addTickletAction.getKlass().getConstructor(new Class<?>[]{getClass()}).newInstance(new Object[]{this});
+				TickletMetadata tickletMetadata = tickletsRegistry.lookup(addTickletAction.getKlassName());
+				Ticklet ticklet = tickletMetadata.getKlass().getConstructor(new Class<?>[]{getClass(), Map.class}).newInstance(new Object[]{this, addTickletAction.getProperties()});
+
+				ticklet.validate();
 				ticklets.put(addTickletAction.getUuid(), ticklet);
 				
 				if (addTickletAction.isAutostart()) {

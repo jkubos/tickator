@@ -30,7 +30,7 @@ public class TickletsRegistry {
 	
 	public static final String PROPERTY_FIELD_PREFIX = "PROP_";
 	
-	private final Map<Class<? extends Ticklet>, TickletMetadata> tickletsMetadata = new HashMap<>();
+	private final Map<String, TickletMetadata> tickletsMetadata = new HashMap<>();
 	private final Collection<TickletMetadata> tickletsMetadataReadOnly = Collections.unmodifiableCollection(tickletsMetadata.values());	
 	
 	public TickletsRegistry() {
@@ -94,11 +94,9 @@ public class TickletsRegistry {
 			addPorts(klass, metadata);
 			addProperties(klass, metadata);
 			
-			if (tickletsMetadata.containsKey(klass)) {
-				logger.warn("Overriding class {}", klass.getName());
-			}
-			
-			tickletsMetadata.put(klass, metadata);
+			Validate.validState(!tickletsMetadata.containsKey(klass.getName()), "Ticklet %s is already in this registry!", klass.getName());
+
+			tickletsMetadata.put(klass.getName(), metadata);
 			
 			logger.info("Ticklet [{}] successfully initialized", klass.getName());
 		});
@@ -141,10 +139,10 @@ public class TickletsRegistry {
 			metadata.addProperty((PropertyDefinition<?>)field.get(null));
 		});
 	}
-
-	public TickletMetadata lookup(Class<? extends Ticklet> klass) {
-		Validate.validState(tickletsMetadata.containsKey(klass), "Cannot find metadata of class %s [%s]", klass.getName(), klass.getClassLoader());
+	
+	public TickletMetadata lookup(String klassName) {
+		Validate.validState(tickletsMetadata.containsKey(klassName), "Cannot find metadata of class %s", klassName);
 		
-		return tickletsMetadata.get(klass);
-	}	
+		return tickletsMetadata.get(klassName);
+	}
 }

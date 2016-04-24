@@ -1,5 +1,6 @@
 package org.tickator;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,17 +11,19 @@ import org.tickator.meta.TickletMetadata;
 import org.tickator.utils.TickatorUtils;
 
 public abstract class Ticklet {
+	private static final Map<String, Object> EMPTY_MAP = Collections.unmodifiableMap(new HashMap<>());
 	
 	private Map<String, Port<?>> portsByUuid = new HashMap<>();
 	private Tickator tickator;
 	private TickletMetadata metadata;
+	private final Map<String, Object> properties;
 
-	public Ticklet(Tickator tickator, TickletMetadata metadata) {
+	public Ticklet(Tickator tickator, Map<String, Object> properties) {
 		Validate.notNull(tickator);
-		Validate.notNull(metadata);
 		
 		this.tickator = tickator;
-		this.metadata = metadata;
+		
+		this.properties = properties!=null ? Collections.unmodifiableMap(properties) : EMPTY_MAP;
 	}
 	
 	protected abstract void execute() throws Exception;
@@ -30,6 +33,10 @@ public abstract class Ticklet {
 	}
 	
 	public TickletMetadata getMetadata() {
+		if (metadata==null) {
+			metadata = tickator.getTickletsRegistry().lookup(getClass().getName());
+		}
+		
 		return metadata;
 	}
 	
@@ -53,12 +60,16 @@ public abstract class Ticklet {
 		return portsByUuid.get(definition.getUuid());
 	}
 	
-	public void validate() {
-		int todoCallAndHide;
+	void validate() {
 		Validate.validState(portsByUuid.size()==metadata.getPorts().size(), "Not all ports are defined for %s!", MetaObjectDescriber.describe(getMetadata()));
 	}
 	
 	protected void scheduleAsync() {
 		tickator.scheduleAsync(this);
+	}
+	
+	public Map<String, Object> getProperties() {
+		Validate.notNull(properties);
+		return properties;
 	}
 }

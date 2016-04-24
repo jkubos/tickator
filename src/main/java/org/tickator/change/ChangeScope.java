@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
-import org.tickator.Ticklet;
 
 public class ChangeScope {
 	private List<AddTickletAction> addTickletActions = new ArrayList<>();
@@ -14,8 +13,8 @@ public class ChangeScope {
 	private List<ConnectAction> connectActions = new ArrayList<>();
 	private Map<String, Connector> connectors = new HashMap<>();
 
-	public AddTickletAction createTicklet(Class<? extends Ticklet> klass) {
-		AddTickletAction res = new AddTickletAction(klass);
+	public AddTickletAction createTicklet(String className) {
+		AddTickletAction res = new AddTickletAction(className);
 		addTickletActions.add(res);
 		
 		return res;

@@ -19,7 +19,24 @@ public class PropertyDefinition<T> {
 	}
 
 	public T get(Ticklet ticklet) {
-		return null;
+		if (ticklet.getProperties().containsKey(uuid)) {
+			return cast(ticklet.getProperties().get(uuid));
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Cast property to type of this property. Also handles int->long re-boxing.
+	 * @param object
+	 * @return
+	 */
+	private T cast(Object object) {
+		if (klass==Long.class && object.getClass()==Integer.class) {
+			return klass.cast(new Long(((Integer)object).longValue()));
+		} else {
+			return klass.cast(object);
+		}
 	}
 
 	public T getOrDefault(Ticklet ticklet, T defaultValue) {
