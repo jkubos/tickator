@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tickator.meta.TickletsRegistry;
+import org.tickator.registry.TickletsRegistry;
 
 public class SelfishClassLoader extends URLClassLoader {
 	private static Logger logger = LoggerFactory.getLogger(SelfishClassLoader.class);

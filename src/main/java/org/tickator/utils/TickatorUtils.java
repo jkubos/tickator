@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.UUID;
 
-import org.tickator.Ticklet;
+import org.tickator.ticklet.Ticklet;
 
 /**
  * Various static utility methods used by Tickator and ticklets
