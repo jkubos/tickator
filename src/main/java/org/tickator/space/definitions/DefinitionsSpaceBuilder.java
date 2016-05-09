@@ -5,26 +5,9 @@ import org.tickator.registry.TickletsRegistry;
 
 public class DefinitionsSpaceBuilder {
 
-	private boolean readOnly;
-	private DefinitionsSpace parent;
 	private TickletsRegistry registry;
 
 	public DefinitionsSpaceBuilder() {
-	}
-	
-	public DefinitionsSpace build() {
-		return new DefinitionsSpace(parent, registry, readOnly);
-	}
-	
-	public DefinitionsSpaceBuilder withReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
-		return this;
-	}
-	
-	public DefinitionsSpaceBuilder withParent(DefinitionsSpace parent) {
-		Validate.notNull(parent);
-		this.parent = parent;
-		return this;
 	}
 	
 	public DefinitionsSpaceBuilder withRegistry(TickletsRegistry registry) {
@@ -32,5 +15,8 @@ public class DefinitionsSpaceBuilder {
 		this.registry = registry;		
 		return this;
 	}
-
+	
+	public DefinitionsSpace build() {
+		return new DefinitionsSpace(registry);
+	}
 }

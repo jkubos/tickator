@@ -9,7 +9,6 @@ import org.tickator.facade.TickatorFacadeForExecutor;
 import org.tickator.facade.TickletsSpaceFacadeForExecutor;
 import org.tickator.facade.TickletsSpaceFacadeForInstancesSpace;
 import org.tickator.space.definitions.DefinitionsSpace;
-import org.tickator.space.definitions.DefinitionsSpaceBuilder;
 import org.tickator.space.instances.InstancesSpace;
 import org.tickator.space.ticklets.TickletsSpace;
 
@@ -33,12 +32,6 @@ public class Tickator {
 		TickletsSpace tickletsSpace = new TickletsSpace();
 		
 		InstancesSpace instancesSpace = new InstancesSpace(TickletsSpaceFacadeForInstancesSpace.create(tickletsSpace));
-		
-		DefinitionsSpaceBuilder dynamicDefinitionsSpaceBuilder = new DefinitionsSpaceBuilder()
-			.withReadOnly(true)
-			.withParent(definitionsSpace);
-		
-		DefinitionsSpace dynamicDefinitionsSpace = dynamicDefinitionsSpaceBuilder.build();
 		
 		executor = new TickatorExecutor(executionStrategy, 
 				TickatorFacadeForExecutor.create(this), 

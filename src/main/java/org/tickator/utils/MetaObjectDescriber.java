@@ -7,6 +7,7 @@ import org.tickator.definition.ports.PortDefinition;
 import org.tickator.definition.properties.PropertyDefinition;
 import org.tickator.registry.TickletMetadata;
 
+@Deprecated
 public class MetaObjectDescriber {
 
 	public static String describe(TickletMetadata tickletMetadata) {

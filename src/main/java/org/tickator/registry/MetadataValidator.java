@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import org.tickator.utils.MetaObjectDescriber;
+import org.tickator.utils.ProblemReporter;
 import org.tickator.utils.ProblemSeverity;
 
 public class MetadataValidator {	
-	public static void validate(TickletsRegistry registry, BiConsumer<ProblemSeverity, String> problemCallback) {
-		validateTickletUniqueness(registry, problemCallback);
-		validateUuidUniqueness(registry, problemCallback);
-		validatePortNameUniqueness(registry, problemCallback);
-		validatePropertyNameUniqueness(registry, problemCallback);
+	public static void validate(TickletsRegistry registry, ProblemReporter problemReporter) {
+		validateTickletUniqueness(registry, problemReporter);
+		validateUuidUniqueness(registry, problemReporter);
+		validatePortNameUniqueness(registry, problemReporter);
+		validatePropertyNameUniqueness(registry, problemReporter);
 	}
 
-	private static void validateTickletUniqueness(TickletsRegistry registry, BiConsumer<ProblemSeverity, String> problemCallback) {
+	private static void validateTickletUniqueness(TickletsRegistry registry, ProblemReporter problemReporter) {
 		final Map<String, List<String>> tickletMapping = new HashMap<>();
 		
 		registry.getTickletsMetadata().forEach(md->{
@@ -25,11 +25,11 @@ public class MetadataValidator {
 		});
 		
 		tickletMapping.entrySet().stream().filter(e->e.getValue().size()>1).forEach(e->{
-			problemCallback.accept(ProblemSeverity.error, String.format("Duplicit ticklet %s in objects %s", e.getKey(), String.join(" / ", e.getValue())));
+			problemReporter.report(ProblemSeverity.error, String.format("Duplicit ticklet %s in objects %s", e.getKey(), String.join(" / ", e.getValue())));
 		});
 	}
 
-	private static void validatePropertyNameUniqueness(TickletsRegistry registry, BiConsumer<ProblemSeverity, String> problemCallback) {
+	private static void validatePropertyNameUniqueness(TickletsRegistry registry, ProblemReporter problemReporter) {
 		registry.getTickletsMetadata().forEach(md->{
 			final Map<String, List<String>> nameMapping = new HashMap<>();
 			
@@ -38,12 +38,12 @@ public class MetadataValidator {
 			});
 			
 			nameMapping.entrySet().stream().filter(e->e.getValue().size()>1).forEach(e->{
-				problemCallback.accept(ProblemSeverity.error, String.format("Duplicit port name %s of %s", e.getKey(), String.join(" / ", e.getValue())));
+				problemReporter.report(ProblemSeverity.error, String.format("Duplicit port name %s of %s", e.getKey(), String.join(" / ", e.getValue())));
 			});
 		});
 	}
 
-	private static void validatePortNameUniqueness(TickletsRegistry registry, BiConsumer<ProblemSeverity, String> problemCallback) {
+	private static void validatePortNameUniqueness(TickletsRegistry registry, ProblemReporter problemReporter) {
 		registry.getTickletsMetadata().forEach(md->{
 			final Map<String, List<String>> nameMapping = new HashMap<>();
 			
@@ -52,12 +52,12 @@ public class MetadataValidator {
 			});
 			
 			nameMapping.entrySet().stream().filter(e->e.getValue().size()>1).forEach(e->{
-				problemCallback.accept(ProblemSeverity.error, String.format("Duplicit property name %s of %s", e.getKey(), String.join(" / ", e.getValue())));
+				problemReporter.report(ProblemSeverity.error, String.format("Duplicit property name %s of %s", e.getKey(), String.join(" / ", e.getValue())));
 			});
 		});
 	}
 
-	private static void validateUuidUniqueness(TickletsRegistry registry, BiConsumer<ProblemSeverity, String> problemCallback) {
+	private static void validateUuidUniqueness(TickletsRegistry registry, ProblemReporter problemReporter) {
 		final Map<String, List<String>> uuidMapping = new HashMap<>();
 		
 		registry.getTickletsMetadata().forEach(md->{
@@ -71,7 +71,7 @@ public class MetadataValidator {
 		});
 		
 		uuidMapping.entrySet().stream().filter(e->e.getValue().size()>1).forEach(e->{
-			problemCallback.accept(ProblemSeverity.error, String.format("Duplicit UUID %s in objects %s", e.getKey(), String.join(" / ", e.getValue())));
+			problemReporter.report(ProblemSeverity.error, String.format("Duplicit UUID %s in objects %s", e.getKey(), String.join(" / ", e.getValue())));
 		});
 	}
 }
