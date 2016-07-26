@@ -7,7 +7,7 @@ permalink: /articles/architecture
 Architecture
 ============
 
-Architecture of Tickator consists of 3 concepts and list of [Timing and rules](/articles/rules).
+Architecture of Tickator consists of 3 concepts and list of [Timing and rules](/articles/rules). That together implies crucial difference against traditional software - blocks of software are [alive all the time](/articles/alive-all-the-time).
 
 Concept 1: Global tick
 ----------------------
