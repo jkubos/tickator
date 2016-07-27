@@ -21,6 +21,7 @@ This image shows activated cells (blue) and spreading change (arrow):
 Compare this with threads used in traditional software - no matter if your program is functional or procedural. There is one or more threads - executed by processor cores - that for **short time** woke up software elements (objects, functions, methods, ...) from **sleeping state**. Right after execution elements again **fall asleep**. One can say number of active elements is equal to number of CPU cores. Programmer must control execution in the way that threads reaches **proper elements in proper time**.
 
 Imagine how would that work in case of your body cells if only small fractions can run simultaneously.
+
 * When some of your stomach cells are doing their job after lunch then neurons in your brain are sleeping and not able to react on potential danger. What would be scheduling algorithm?
 * In what order should be body cells traversed when looking for one that needs acting?
 * If event (e.g. hormone reaches cell) occurs during processing of different part - should it be stored somewhere and handled later, or lost?

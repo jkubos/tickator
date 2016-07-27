@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="cells-tickator.svg"
-   inkscape:export-filename="/home/jarek/tickator-web/img/cells.png"
-   inkscape:export-xdpi="97.801765"
-   inkscape:export-ydpi="97.801765">
+   inkscape:export-filename="/home/jarek/tickator-web/img/cells-tickator.png"
+   inkscape:export-xdpi="92.023438"
+   inkscape:export-ydpi="92.023438">
   <defs
      id="defs4">
     <pattern
@@ -20998,7 +20998,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
