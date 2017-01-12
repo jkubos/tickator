@@ -38,13 +38,24 @@ body {
   margin-bottom: 35px;
 }
 
+.run-button {
+  color: #22d822;
+  margin-left: 15px;
+  white-space: nowrap;
+}
+
+.run-button:hover {
+  text-decoration: none;
+  color: #00b800;
+}
+
 .footer {
   position: absolute;
   bottom: 0px;
   width: 100%;
   height: 35px;
   background-color: #eee;
-  
+
   .container {
     padding-top: 5px;
   }
