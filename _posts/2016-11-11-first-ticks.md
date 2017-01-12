@@ -50,7 +50,7 @@ advantages:
 Ticklet definition looks like:
 
 <pre><code>
-export default class Sum extends Ticklet {
+export class Sum extends Ticklet {
 
   static define(b) {
     b.klass(Sum)
@@ -87,7 +87,7 @@ export default class Sum extends Ticklet {
 Component definition looks like:
 
 <pre><code>
-export default function defineFunction(b) {
+export function defineFunction(b) {
   b.name('Root')
 
   b.instance(b=>{
