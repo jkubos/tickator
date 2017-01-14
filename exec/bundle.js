@@ -30466,7 +30466,7 @@
 
 
 	// module
-	exports.push([module.id, ".src-ui-quarks-TabContent-___style__main___22ubC {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  bottom: 0px;\n  right: 0px;\n  overflow: hidden;\n  padding: 2px;\n}\n.src-ui-quarks-TabContent-___style__hidden___4nDIP {\n  display: none;\n}\n", ""]);
+	exports.push([module.id, ".src-ui-quarks-TabContent-___style__main___22ubC {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  bottom: 0px;\n  right: 0px;\n  overflow: auto;\n  padding: 2px;\n}\n.src-ui-quarks-TabContent-___style__hidden___4nDIP {\n  display: none;\n}\n", ""]);
 
 	// exports
 	exports.locals = {
@@ -30509,6 +30509,8 @@
 
 	var _UiState = __webpack_require__(174);
 
+	var _Size = __webpack_require__(196);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30534,20 +30536,19 @@
 	    value: function render() {
 	      var _this2 = this;
 
-	      if (this.props.width <= 0 || this.props.height <= 0) {
-	        return null;
-	      }
-
 	      var instancePov = this.context.uiState.currentContextStore.getDisplayedInstance();
 
-	      this.instances_geometry.update(instancePov.definition(), this.props.width, this.props.height);
+	      var safeWidth = Math.max(200, this.props.width);
+	      var safeHeight = Math.max(200, this.props.height);
+
+	      this.instances_geometry.update(instancePov.definition(), safeWidth, safeHeight);
 
 	      return _react2.default.createElement(
 	        'svg',
 	        {
 	          style: { display: 'inline', userSelect: 'none' },
-	          width: this.props.width,
-	          height: this.props.height
+	          width: this.instances_geometry.getRealSize().width,
+	          height: this.instances_geometry.getRealSize().height
 	        },
 	        _react2.default.createElement('rect', {
 	          x: this.instances_geometry.getSelf().bbox.x,
@@ -31010,6 +31011,8 @@
 
 	var _ShortestWireFinder = __webpack_require__(284);
 
+	var _Size = __webpack_require__(196);
+
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31025,6 +31028,11 @@
 	  }
 
 	  _createClass(InstancesGeometry, [{
+	    key: 'getRealSize',
+	    value: function getRealSize() {
+	      return this._realSize;
+	    }
+	  }, {
 	    key: 'update',
 	    value: function update(componentDef, width, height) {
 	      var _this = this;
@@ -31038,13 +31046,16 @@
 	        self: {}
 	      };
 
-	      this._computeSelf(componentDef, width, height);
+	      this._realSize = new _Size.Size(width, height);
 
+	      //update content size, must be before _computeSelf
 	      componentDef.instances().forEach(function (instanceDef) {
 	        return _this._computeInstance(instanceDef);
 	      });
 
-	      this._shortestPathFinder.update(width, height, Object.keys(this._data.instances).map(function (k) {
+	      this._computeSelf(componentDef, this._realSize.width, this._realSize.height);
+
+	      this._shortestPathFinder.update(this._realSize.width, this._realSize.height, Object.keys(this._data.instances).map(function (k) {
 	        return _this._data.instances[k];
 	      }));
 
@@ -31132,6 +31143,10 @@
 	      var boxHeight = instanceDef.definition().size().height;
 
 	      var bbox = new _Rectangle.Rectangle(instanceDef.x() - boxWidth / 2 + this._border, instanceDef.y() - 140 / 2 + this._border, boxWidth, boxHeight);
+
+	      this._realSize.width = Math.max(this._realSize.width, bbox.x + bbox.width + 50);
+	      this._realSize.height = Math.max(this._realSize.height, bbox.y + bbox.height + 50);
+
 	      var inputs = instanceDef.definition().inputs().reduce(function (res, i) {
 	        res[i.name()] = _this3._computePin(bbox, instanceDef.inputSide(i.name()), instanceDef.inputRatio(i.name()), false);
 	        return res;
