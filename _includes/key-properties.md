@@ -3,5 +3,5 @@
 *   change driven
 *   global lock free
 *   deterministic
-*   highly componentizable
-*   graph defined (in future)
+*   easy to create and reuse components
+*   defined by schema

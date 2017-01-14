@@ -54,11 +54,22 @@ Digital circuits
 
 Tickator is inspired by digital circuits. See [Architecture](/articles/architecture). Tickator may however differ in aspects that are not doable on wire level. For example it is possible to connect multiple outputs to single input. That is not doable on hardware level.
 
+VHDL
+----
+
+VHDL is used for programming digital circuits and Tickator is inspired by digital circuits. So Tickator is similar to VHDL. But just a little bit. Tickator is abstracted from physical hardware so there are no hardware limitations:
+
+*    More than one outputs can be connected to single input (not doable on hardware due to logical 0/1 clash)
+*    Complex structure can be sent over wire (only single bit can be sent on physical wire)
+*    Tickator program may be dynamic, typical VHDL program is static one that is written in ROM or used for physical chip design.
+
+Also, Tickator is supposed to be generic programming tool. VHDL is typically used just for hardware and FPGA programming.
+
 Global tick in simulations and games
 ------------------------------------
 
 I know that global tick is used in [games](http://gamedev.stackexchange.com/questions/81608/what-is-a-tick-in-the-context-of-game-development) and [simulations](https://www.it.uu.se/edu/course/homepage/oopjava/st08/assign/simulering-eng.html). There is major difference between those and Tickator - in **granularity**.
 
-Tickator uses global tick on **smallest possible granularity**. In best case there are thousands of small processors that sychronizes at each instruction by global tick. 
+Tickator uses global tick on **smallest possible granularity**. In best case there are thousands of small processors that sychronizes at each instruction by global tick.
 
 Games and simulations ticks on high levels - one frame or simulation cycle. In between them they behaves as normal software.
