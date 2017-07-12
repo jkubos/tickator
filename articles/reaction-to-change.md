@@ -35,7 +35,8 @@ it works in the way that patiently waits for change. Then act and potentially sp
 
 Please note one interesting thing: Waiting for change and acting is spread to massive amount of responsible objects.
 90 billion neurons in human brain, 10 million citizens in Czech republic. There almost newer single point of failure.
-Failure of relatively high number of objects is tolerated.
+One broken router does not break Internet, one failing neuron brain and one citizen Czech law system.
+Even failure of relatively high number of objects is tolerated.
 
 Now, compare that with our current computers:
 
